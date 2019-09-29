@@ -5,8 +5,6 @@
 
 
 
-
-void led_gpio_init(void);
-void led_toggle(void);
+void led_register(void);
 
 #endif 

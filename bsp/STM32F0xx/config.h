@@ -28,6 +28,16 @@ extern "C"
    
 #endif
 
+#ifndef USING_DEBUG
+# define assert(p) ((void)0)
+#else
+# define assert(p) do { \
+    if (!(p)) { \
+        os_log("BUG at assert(%s)\n", #p); \
+    }       \
+ } while (0)
+#endif
+ 
    
 #ifdef __cplusplus
 }

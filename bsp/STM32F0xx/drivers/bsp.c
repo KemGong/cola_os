@@ -31,7 +31,7 @@ void bsp_init(void)
 {
    
     usart_init(); 
-    led_gpio_init();
+    led_register();
     sys_tick_init(1,0); 
 }
 

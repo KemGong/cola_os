@@ -1,29 +1,25 @@
-#include "cola_os.h"
-#include "app.h"
 #include <string.h>
-#include "bsp.h"
-#include "led.h"
+#include "app.h"
 #include "config.h"
+#include "cola_device.h"
+#include "cola_os.h"
 
-task_t timer_500ms,timer_1s;
 
+static task_t timer_500ms;
+static cola_device_t *app_led_dev;
 
 //led每500ms状态改变一次
 static void timer_500ms_cb(uint32_t event)
 {
-    led_toggle();
+    cola_device_ctrl(app_led_dev,LED_TOGGLE,0);
 }
-//led每500ms状态改变一次
-static void timer_1s_cb(uint32_t event)
-{
-    os_log("timer 1s......\r\n");
-}
+
 
 
 void app_init(void)
 {
+    app_led_dev = cola_device_find("led");
+    assert(app_led_dev);
     cola_timer_create(&timer_500ms,timer_500ms_cb);
     cola_timer_start(&timer_500ms,TIMER_ALWAYS,500);
-    cola_timer_create(&timer_1s,timer_1s_cb);
-    cola_timer_start(&timer_1s,TIMER_ALWAYS,1000);
 }

@@ -496,6 +496,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\os\cola_os.c</FilePath>
             </File>
+            <File>
+              <FileName>cola_device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\os\cola_device.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

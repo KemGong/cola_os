@@ -16,6 +16,7 @@
 ".\objects\stm32f0xx_adc.o"
 ".\objects\system_stm32f0xx.o"
 ".\objects\cola_os.o"
+".\objects\cola_device.o"
 ".\objects\app.o"
 --library_type=microlib --strict --scatter ".\Objects\ExecutableFile.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols

@@ -1,6 +1,6 @@
 Dependencies for Project 'STM32F0xx', Target 'Project_Name': (DO NOT MODIFY !)
 F (.\Libraries\CMSIS\DeviceSupport\startup\startup_stm32f030.s)(0x5D89C126)(--cpu Cortex-M0 -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 524" --pd "STM32F030 SETA 1"--list .\listings\startup_stm32f030.lst --xref -o .\objects\startup_stm32f030.o --depend .\objects\startup_stm32f030.d)
-F (.\drivers\bsp.c)(0x5D89C241)(--c99 -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\app -I .\Libraries\CMSIS\CoreSupport -I .\Libraries\CMSIS\DeviceSupport -I .\Libraries\CMSIS\DeviceSupport\startup -I .\Libraries\STM32F0xx_StdPeriph_Driver\inc -I .\Libraries\STM32F0xx_StdPeriph_Driver\src -I .\drivers -I ..\STM32F0xx -I ..\..\module -I ..\..\os -I ..\..\app\user-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F030-o .\objects\bsp.o --omf_browse .\objects\bsp.crf --depend .\objects\bsp.d)
+F (.\drivers\bsp.c)(0x5D8DD71F)(--c99 -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\app -I .\Libraries\CMSIS\CoreSupport -I .\Libraries\CMSIS\DeviceSupport -I .\Libraries\CMSIS\DeviceSupport\startup -I .\Libraries\STM32F0xx_StdPeriph_Driver\inc -I .\Libraries\STM32F0xx_StdPeriph_Driver\src -I .\drivers -I ..\STM32F0xx -I ..\..\module -I ..\..\os -I ..\..\app\user-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F030-o .\objects\bsp.o --omf_browse .\objects\bsp.crf --depend .\objects\bsp.d)
 I (drivers\bsp.h)(0x5D8492D1)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
 I (.\Libraries\CMSIS\DeviceSupport\stm32f0xx.h)(0x574680CB)
@@ -35,7 +35,7 @@ I (.\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_misc.h)(0x54808D10)
 I (drivers\usart.h)(0x5D89C1D7)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x588B8344)
 I (drivers\systick.h)(0x5D81A537)
-I (drivers\led.h)(0x5D89C95A)
+I (drivers\led.h)(0x5D8DD707)
 F (.\drivers\usart.c)(0x5D89C479)(--c99 -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\app -I .\Libraries\CMSIS\CoreSupport -I .\Libraries\CMSIS\DeviceSupport -I .\Libraries\CMSIS\DeviceSupport\startup -I .\Libraries\STM32F0xx_StdPeriph_Driver\inc -I .\Libraries\STM32F0xx_StdPeriph_Driver\src -I .\drivers -I ..\STM32F0xx -I ..\..\module -I ..\..\os -I ..\..\app\user-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F030-o .\objects\usart.o --omf_browse .\objects\usart.crf --depend .\objects\usart.d)
 I (.\Libraries\CMSIS\DeviceSupport\stm32f0xx.h)(0x574680CB)
 I (.\Libraries\CMSIS\CoreSupport\core_cm0.h)(0x547D9682)
@@ -69,8 +69,8 @@ I (.\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_wwdg.h)(0x54808D10)
 I (.\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_misc.h)(0x54808D10)
 I (drivers\usart.h)(0x5D89C1D7)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x588B8344)
-I (..\STM32F0xx\config.h)(0x5D89C0E5)
-F (.\drivers\led.c)(0x5D89C960)(--c99 -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\app -I .\Libraries\CMSIS\CoreSupport -I .\Libraries\CMSIS\DeviceSupport -I .\Libraries\CMSIS\DeviceSupport\startup -I .\Libraries\STM32F0xx_StdPeriph_Driver\inc -I .\Libraries\STM32F0xx_StdPeriph_Driver\src -I .\drivers -I ..\STM32F0xx -I ..\..\module -I ..\..\os -I ..\..\app\user-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F030-o .\objects\led.o --omf_browse .\objects\led.crf --depend .\objects\led.d)
+I (..\STM32F0xx\config.h)(0x5D900B3A)
+F (.\drivers\led.c)(0x5D900C93)(--c99 -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\app -I .\Libraries\CMSIS\CoreSupport -I .\Libraries\CMSIS\DeviceSupport -I .\Libraries\CMSIS\DeviceSupport\startup -I .\Libraries\STM32F0xx_StdPeriph_Driver\inc -I .\Libraries\STM32F0xx_StdPeriph_Driver\src -I .\drivers -I ..\STM32F0xx -I ..\..\module -I ..\..\os -I ..\..\app\user-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F030-o .\objects\led.o --omf_browse .\objects\led.crf --depend .\objects\led.d)
 I (.\Libraries\CMSIS\DeviceSupport\stm32f0xx.h)(0x574680CB)
 I (.\Libraries\CMSIS\CoreSupport\core_cm0.h)(0x547D9682)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -101,7 +101,8 @@ I (.\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_tim.h)(0x54808D10)
 I (.\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_usart.h)(0x54808D11)
 I (.\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_wwdg.h)(0x54808D10)
 I (.\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_misc.h)(0x54808D10)
-I (drivers\led.h)(0x5D89C95A)
+I (drivers\led.h)(0x5D8DD707)
+I (..\..\os\cola_device.h)(0x5D900AD8)
 F (.\drivers\systick.c)(0x5D89C464)(--c99 -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\app -I .\Libraries\CMSIS\CoreSupport -I .\Libraries\CMSIS\DeviceSupport -I .\Libraries\CMSIS\DeviceSupport\startup -I .\Libraries\STM32F0xx_StdPeriph_Driver\inc -I .\Libraries\STM32F0xx_StdPeriph_Driver\src -I .\drivers -I ..\STM32F0xx -I ..\..\module -I ..\..\os -I ..\..\app\user-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F030-o .\objects\systick.o --omf_browse .\objects\systick.crf --depend .\objects\systick.d)
 I (.\Libraries\CMSIS\DeviceSupport\stm32f0xx.h)(0x574680CB)
 I (.\Libraries\CMSIS\CoreSupport\core_cm0.h)(0x547D9682)
@@ -147,7 +148,7 @@ I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
 I (..\..\os\cola_os.h)(0x5D89C734)
 I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
 I (..\..\app\user\app.h)(0x5D89C123)
-F (.\config.h)(0x5D89C0E5)()
+F (.\config.h)(0x5D900B3A)()
 F (.\Libraries\STM32F0xx_StdPeriph_Driver\src\stm32f0xx_gpio.c)(0x54808D13)(--c99 -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\app -I .\Libraries\CMSIS\CoreSupport -I .\Libraries\CMSIS\DeviceSupport -I .\Libraries\CMSIS\DeviceSupport\startup -I .\Libraries\STM32F0xx_StdPeriph_Driver\inc -I .\Libraries\STM32F0xx_StdPeriph_Driver\src -I .\drivers -I ..\STM32F0xx -I ..\..\module -I ..\..\os -I ..\..\app\user-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F030-o .\objects\stm32f0xx_gpio.o --omf_browse .\objects\stm32f0xx_gpio.crf --depend .\objects\stm32f0xx_gpio.d)
 I (.\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_gpio.h)(0x54808D11)
 I (.\Libraries\CMSIS\DeviceSupport\stm32f0xx.h)(0x574680CB)
@@ -434,13 +435,16 @@ I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
 I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x588B8344)
 I (.\drivers\bsp.h)(0x5D8492D1)
-F (..\..\app\user\app.c)(0x5D89C958)(--c99 -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\app -I .\Libraries\CMSIS\CoreSupport -I .\Libraries\CMSIS\DeviceSupport -I .\Libraries\CMSIS\DeviceSupport\startup -I .\Libraries\STM32F0xx_StdPeriph_Driver\inc -I .\Libraries\STM32F0xx_StdPeriph_Driver\src -I .\drivers -I ..\STM32F0xx -I ..\..\module -I ..\..\os -I ..\..\app\user-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F030-o .\objects\app.o --omf_browse .\objects\app.crf --depend .\objects\app.d)
+F (..\..\os\cola_device.c)(0x5D8DD31A)(--c99 -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\app -I .\Libraries\CMSIS\CoreSupport -I .\Libraries\CMSIS\DeviceSupport -I .\Libraries\CMSIS\DeviceSupport\startup -I .\Libraries\STM32F0xx_StdPeriph_Driver\inc -I .\Libraries\STM32F0xx_StdPeriph_Driver\src -I .\drivers -I ..\STM32F0xx -I ..\..\module -I ..\..\os -I ..\..\app\user-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F030-o .\objects\cola_device.o --omf_browse .\objects\cola_device.crf --depend .\objects\cola_device.d)
+I (..\..\os\cola_device.h)(0x5D900AD8)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x588B8344)
+I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
+F (..\..\app\user\app.c)(0x5D900B65)(--c99 -c --cpu Cortex-M0 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\app -I .\Libraries\CMSIS\CoreSupport -I .\Libraries\CMSIS\DeviceSupport -I .\Libraries\CMSIS\DeviceSupport\startup -I .\Libraries\STM32F0xx_StdPeriph_Driver\inc -I .\Libraries\STM32F0xx_StdPeriph_Driver\src -I .\drivers -I ..\STM32F0xx -I ..\..\module -I ..\..\os -I ..\..\app\user-I.\RTE\_Project_Name-Id:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.4.0\Device\Include-Id:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F030-o .\objects\app.o --omf_browse .\objects\app.crf --depend .\objects\app.d)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x588B8344)
+I (..\..\app\user\app.h)(0x5D89C123)
+I (..\STM32F0xx\config.h)(0x5D900B3A)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x588B8344)
+I (..\..\os\cola_device.h)(0x5D900AD8)
 I (..\..\os\cola_os.h)(0x5D89C734)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
 I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x588B8344)
-I (..\..\app\user\app.h)(0x5D89C123)
-I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x588B8344)
-I (.\drivers\bsp.h)(0x5D8492D1)
-I (.\drivers\led.h)(0x5D89C95A)
-I (..\STM32F0xx\config.h)(0x5D89C0E5)
-I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x588B8344)
