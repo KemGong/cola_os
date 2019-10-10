@@ -3,8 +3,5 @@
 
 
 
-
-void sys_tick_init(uint16_t ms, uint8_t priority);
-
 #endif
 

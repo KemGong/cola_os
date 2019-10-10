@@ -1,7 +1,7 @@
 /**
   ********************************  STM32F0xx  *********************************
   * @文件名     ： bsp.c
-  * @作者       ： strongerHuang
+  * @作者       ： sun
   * @库版本     ： V1.5.0
   * @文件版本   ： V1.0.0
   * @日期       ： 2016年05月28日
@@ -17,22 +17,17 @@
 #include "usart.h"
 #include "systick.h"
 #include "led.h"
+#include "cola_init.h"
 
+void bsp_rcc(void)
+{
+    
+}
+pure_initcall(bsp_rcc);
 
-
-/************************************************
-函数名称 ： BSP_Initializes
-功    能 ： 底层初始化
-参    数 ： 无
-返 回 值 ： 无
-作    者 ： strongerHuang
-*************************************************/
 void bsp_init(void)
 {
-   
-    usart_init(); 
-    led_register();
-    sys_tick_init(1,0); 
+    do_init_call();
 }
 
 void enable_irq(void)

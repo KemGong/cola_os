@@ -47,10 +47,12 @@ static struct cola_device_ops ops =
     .control = led_ctrl,
 };
 
-void led_register(void)
+static void led_register(void)
 {
     led_gpio_init();
     led_dev.dops = &ops;
     led_dev.name = "led";
     cola_device_register(&led_dev);
 }
+
+device_initcall(led_register);

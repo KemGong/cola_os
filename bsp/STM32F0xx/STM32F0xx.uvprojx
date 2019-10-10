@@ -333,7 +333,7 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--gnu</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..\..\app;.\Libraries\CMSIS\CoreSupport;.\Libraries\CMSIS\DeviceSupport;.\Libraries\CMSIS\DeviceSupport\startup;.\Libraries\STM32F0xx_StdPeriph_Driver\inc;.\Libraries\STM32F0xx_StdPeriph_Driver\src;.\drivers;..\STM32F0xx;..\..\module;..\..\os;..\..\app\user</IncludePath>
@@ -500,6 +500,11 @@
               <FileName>cola_device.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\os\cola_device.c</FilePath>
+            </File>
+            <File>
+              <FileName>cola_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\os\cola_init.c</FilePath>
             </File>
           </Files>
         </Group>

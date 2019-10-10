@@ -1,7 +1,7 @@
 /**
   ********************************  STM32F0xx  *********************************
   * @文件名     ： usart.c
-  * @作者       ： strongerHuang
+  * @作者       ： sun
   * @库版本     ： V1.5.0
   * @文件版本   ： V1.0.0
   * @日期       ： 2016年05月28日
@@ -104,7 +104,7 @@ static void uart1_sendbyte(uint8_t Data)
 返 回 值 ： 无
 作    者 ： sun
 *************************************************/
-void uart1_sendnbyte(uint8_t *pData, uint16_t Length)
+static void uart1_sendnbyte(uint8_t *pData, uint16_t Length)
 {
   while(Length--)
   {
@@ -113,14 +113,14 @@ void uart1_sendnbyte(uint8_t *pData, uint16_t Length)
   }
 }
 
-void usart_init(void)
+static void usart_init(void)
 {
     uart1_gpio_configuration();
     uart1_configuration(115200);  
     
 }
 
-
+fs_initcall(usart_init);
 
 
 

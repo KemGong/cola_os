@@ -1,7 +1,7 @@
 /**
   *********************************  STM32F0xx  ********************************
   * @文件名     ： bsp.h
-  * @作者       ： strongerHuang
+  * @作者       ： sun
   * @库版本     ： V1.5.0
   * @文件版本   ： V1.0.0
   * @日期       ： 2016年05月28日
@@ -46,4 +46,4 @@ void delay_ms(uint32_t cnt);
 
 #endif /* _BSP_H */
 
-/**** Copyright (C)2016 strongerHuang. All Rights Reserved **** END OF FILE ****/
+/**** Copyright (C)2016 sun. All Rights Reserved **** END OF FILE ****/

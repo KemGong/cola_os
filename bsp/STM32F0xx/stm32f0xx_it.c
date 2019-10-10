@@ -104,7 +104,7 @@ void PendSV_Handler(void)
 功    能 ： USART1中断
 参    数 ： 无
 返 回 值 ： 无
-作    者 ： strongerHuang
+作    者 ： sun
 *************************************************/
 //void USART1_IRQHandler(void)
 //{

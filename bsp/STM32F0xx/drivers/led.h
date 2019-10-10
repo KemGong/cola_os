@@ -4,7 +4,4 @@
 
 
 
-
-void led_register(void);
-
 #endif 

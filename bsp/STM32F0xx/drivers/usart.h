@@ -1,7 +1,7 @@
 /**
   ********************************  STM32F0xx  *********************************
   * @文件名     ： usart.h
-  * @作者       ： strongerHuang
+  * @作者       ： sun
   * @库版本     ： V1.5.0
   * @文件版本   ： V1.0.0
   * @日期       ： 2016年05月28日
@@ -13,10 +13,7 @@
 #define _USART_H
 #include <stdio.h>
 #include <stdint.h>
-/*
-串口初始化
-*/
-void usart_init(void);
+
 
 #endif /* _USART_H */
 

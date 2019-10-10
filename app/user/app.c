@@ -15,7 +15,6 @@ static void timer_500ms_cb(uint32_t event)
 }
 
 
-
 void app_init(void)
 {
     app_led_dev = cola_device_find("led");

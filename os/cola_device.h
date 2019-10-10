@@ -2,6 +2,8 @@
 #define _COLA_DEVICE_H_
 
 
+#include "cola_init.h"
+
 enum LED_state
 {
     LED_OFF,
@@ -9,9 +11,6 @@ enum LED_state
     LED_TOGGLE,
 
 };
-
-
-
 
 typedef struct cola_device  cola_device_t;
 
