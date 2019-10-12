@@ -11,7 +11,12 @@ enum LED_state
     LED_TOGGLE,
 
 };
-
+enum DEV_sleep
+{
+	DEV_SLEEP= 0x00,
+    DEV_DEEP_SLEEP = 0x01,
+	
+};
 typedef struct cola_device  cola_device_t;
 
 struct cola_device_ops
