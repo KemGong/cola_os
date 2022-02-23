@@ -16,7 +16,7 @@
 #include "stm32f0xx.h"
 #include "usart.h"
 #include "config.h"
-
+#include "cola_init.h"
 
 #ifdef  USING_DEBUG
 int fputc(int ch, FILE *f)
@@ -90,11 +90,11 @@ static void uart1_configuration(uint32_t bund)
 返 回 值 ： 无
 作    者 ： sun
 *************************************************/
-static void uart1_sendbyte(uint8_t Data)
-{
-    USART1->TDR = (Data & (uint16_t)0x01FF);
-    while(USART_GetFlagStatus(USART1,USART_FLAG_TC) == RESET);//等待发送完成
-}
+//static void uart1_sendbyte(uint8_t Data)
+//{
+//    USART1->TDR = (Data & (uint16_t)0x01FF);
+//    while(USART_GetFlagStatus(USART1,USART_FLAG_TC) == RESET);//等待发送完成
+//}
 
 /************************************************
 函数名称 ： USART1_SendNByte
@@ -104,14 +104,14 @@ static void uart1_sendbyte(uint8_t Data)
 返 回 值 ： 无
 作    者 ： sun
 *************************************************/
-static void uart1_sendnbyte(uint8_t *pData, uint16_t Length)
-{
-  while(Length--)
-  {
-    uart1_sendbyte(*pData);
-    pData++;
-  }
-}
+//static void uart1_sendnbyte(uint8_t *pData, uint16_t Length)
+//{
+//  while(Length--)
+//  {
+//    uart1_sendbyte(*pData);
+//    pData++;
+//  }
+//}
 
 static void usart_init(void)
 {
