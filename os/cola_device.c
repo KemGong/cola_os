@@ -6,7 +6,7 @@
 struct cola_device *device_list = NULL;
 
 /*
-    查找任务是否存在
+    查找设备是否存在
 */
 static bool cola_device_is_exists( cola_device_t *dev )
 {
