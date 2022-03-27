@@ -3,6 +3,14 @@
 
 
 #include "cola_init.h"
+#include <stdint.h>
+
+enum OUTPUT_state
+{
+	STATE_OUTPUT_LOW  = 0x00,
+    STATE_OUTPUT_HIGH = 0x01,
+
+};
 
 enum LED_state
 {
@@ -14,9 +22,19 @@ enum LED_state
 enum DEV_sleep
 {
 	DEV_SLEEP= 0x00,
-    DEV_DEEP_SLEEP = 0x01,
+    DEV_DEEP_SLEEP ,
+    DEV_STOP,
+    DEV_STANDBY,
 	
 };
+
+struct serial_configure
+{
+    uint32_t baud_rate;
+};
+
+
+
 typedef struct cola_device  cola_device_t;
 
 struct cola_device_ops
@@ -27,13 +45,14 @@ struct cola_device_ops
     int  (*read)   (cola_device_t *dev, int pos, void *buffer, int size);
     int  (*write)  (cola_device_t *dev, int pos, const void *buffer, int size);
     int  (*control)(cola_device_t *dev, int cmd, void *args);
-
+	int  (*config) (cola_device_t *dev, void *args, void *var);
 };
 
 struct cola_device
 {
     const char * name;
-    struct cola_device_ops *dops;
+    const struct cola_device_ops *dops;
+    void   *owner;
     struct cola_device *next;
 };
 
@@ -57,5 +76,12 @@ int cola_device_write(cola_device_t *dev, int pos, const void *buffer, int size)
     驱动控制
 */
 int cola_device_ctrl(cola_device_t *dev,  int cmd, void *arg);
-
+/*
+    驱动配置
+*/
+int cola_device_cfg(cola_device_t *dev, void *args, void *var);
+/*
+    设置驱动属于哪个任务
+*/
+void cola_device_set_owner(cola_device_t *dev, const void *owner);
 #endif 

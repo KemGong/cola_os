@@ -4,35 +4,60 @@
 #include "gpio.h"
 #include "cola_os.h"
 #include "cola_device.h"
+#include <string.h>
+#include "utils.h"
 
-#define LED_GREEN_ON                  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET)
-#define LED_GREEN_OFF                 HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET)
-#define LED_GREEN_TOGGLE              HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin)
+#define DEF_VAL_NOPULL       0x02
+#define DEF_VAL_HIGH         0x01
+#define DEF_VAL_LOW          0x00
 
 
+struct USER_LED
+{
+    const char   *name;
+    GPIO_TypeDef *port;
+    uint32_t pin;
+    uint8_t def;
+    cola_device_t dev;
+};
 
-static cola_device_t led_dev;
+static struct USER_LED led_list[] = 
+{
+	{"led_green", LED_GREEN_GPIO_Port,LED_GREEN_Pin, DEF_VAL_HIGH,{0}},
+    {"led_blue",  LED_BLUE_GPIO_Port ,LED_BLUE_Pin,  DEF_VAL_HIGH,{0}},
+    {"led_red",   LED_RED_GPIO_Port,  LED_RED_Pin,   DEF_VAL_HIGH,{0}},
+};
 
 static void led_gpio_init(void)
 {
     MX_GPIO_Init();
+    
 }
 
 static int led_ctrl(cola_device_t *dev, int cmd, void *args)
 {
-    if(LED_TOGGLE == cmd)
+    
+    int i = 0; 
+    for (i = 0; i < array_size(led_list); i++) 
     {
-        LED_GREEN_TOGGLE;
+        if (!strcmp(led_list[i].name, dev->name))
+        {
+            if(LED_TOGGLE == cmd)
+            {
+                HAL_GPIO_TogglePin(led_list[i].port,led_list[i].pin);
+            }
+            else  if(LED_OFF == cmd)
+            {
+                HAL_GPIO_WritePin(led_list[i].port, led_list[i].pin, GPIO_PIN_SET);
+            }
+            else
+            {
+                HAL_GPIO_WritePin(led_list[i].port, led_list[i].pin, GPIO_PIN_RESET);
+            }
+            return 1;            
+        }
     }
-    else  if(LED_OFF == cmd)
-    {
-        LED_GREEN_OFF;
-    }
-    else
-    {
-        LED_GREEN_ON;
-    }
-    return 1;
+    return 0;
 }
 
 
@@ -43,10 +68,14 @@ static struct cola_device_ops ops =
 
 static void led_register(void)
 {
+    int i;
     led_gpio_init();
-    led_dev.dops = &ops;
-    led_dev.name = "led";
-    cola_device_register(&led_dev);
+    for (i = 0; i < array_size(led_list); i++) 
+    {
+        led_list[i].dev.name = led_list[i].name;
+        led_list[i].dev.dops  = &ops;
+        cola_device_register(&led_list[i].dev);
+    }
 }
 
 device_initcall(led_register);

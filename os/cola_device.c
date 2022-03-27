@@ -118,3 +118,24 @@ int cola_device_ctrl(cola_device_t *dev,  int cmd, void *arg)
     }
     return 0;
 }
+/*
+    驱动配置
+*/
+int cola_device_cfg(cola_device_t *dev, void *args, void *var)
+{
+    if(dev)
+    {
+        if(dev->dops->config)
+        {
+            return dev->dops->config(dev, args, var);
+        }
+    }
+    return 0;
+}
+/*
+    设置驱动属于哪个任务
+*/
+void cola_device_set_owner(cola_device_t *dev, const void *owner)
+{
+    dev->owner = (void *)owner;
+}

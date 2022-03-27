@@ -1,28 +1,53 @@
-#include "cola_os.h"
 #include <stdio.h>
+#include "cola_os.h"
 #include "bsp.h"
+
+
+#define LIST_HEAD_INIT(name) { 0 }
+
+#define TASK_LIST_HEAD(name) \
+    struct task_s name = LIST_HEAD_INIT(name)
+
+#define list_for_each(pos, head) \
+    for (pos = (head)->next; pos != NULL; pos = pos->next)
+
+#define list_for_null(pos, head) \
+    for (pos = head; pos->next != NULL; pos = pos->next)
+
+#define list_for_each_safe(pos, n, head) \
+    for (pos = (head)->next; pos != NULL; \
+          n = pos->next,pos = n)
+
+#define list_for_each_del(pos, n, head) \
+    for (n = (head),pos = (head)->next; pos != NULL; \
+          n = pos,pos = pos->next)
+
+
+
+#define time_after_eq(a,b)  (((int)((a) - (b)) >= 0))
+
 enum
 {
     TASK_TASK   = 0x00,
     TASK_TIMER  = 0x01,
 };
+cbFunc  sleep_handle = NULL;
 
-static struct task_s *task_list = NULL;
-static volatile  uint8_t task_num = 0;
+static TASK_LIST_HEAD(task_list);
 
+volatile unsigned int jiffies = 0;
 /*
     查找任务是否存在
 */
 static bool cola_task_is_exists( task_t *task )
 {
-    task_t* cur = task_list;
-    while( cur != NULL )
+    task_t* cur ;
+    list_for_each(cur,&task_list)
     {
         if( cur->timerNum == task->timerNum )
         {
             return true;
         }
-        cur = cur->next;
     }
     return false;
 }
@@ -30,9 +55,9 @@ static bool cola_task_is_exists( task_t *task )
 /*
     创建任务
 */
-int cola_task_create(task_t *task,cbFunc func)
+int cola_task_create(task_t *task,cbFunc func,void *arg)
 {
-    task_t *cur  = task_list;
+    task_t *cur  ;
     OS_CPU_SR cpu_sr;
     enter_critical();
     if((NULL == task )||(cola_task_is_exists(task)))
@@ -42,27 +67,18 @@ int cola_task_create(task_t *task,cbFunc func)
     }
     task->taskFlag  = TASK_TASK;
     task->start     = true;
-    task->run       = true; 
+    task->run       = true;
     task->func      = func;
     task->event     = 0;
-    if(NULL == task_list)
+    task->usr       = arg;
+    task->isBusy    = TASK_IDLE;
+    list_for_null(cur,&task_list)
     {
-        task_num++;
-        task->timerNum = task_num;
-        task_list = task;
-        task_list->next = NULL;
+
     }
-    else
-    {
-        while((cur->next != NULL))
-        {
-            cur = cur->next;
-        }
-        task_num++;
-        task->timerNum = task_num;
-        cur->next = task;
-        task->next = NULL;
-    }
+    task->timerNum = cur->timerNum+1;
+    cur->next  = task;
+    task->next = NULL;
     exit_critical();
     return true;
 }
@@ -72,37 +88,47 @@ int cola_task_create(task_t *task,cbFunc func)
 */
 int cola_task_delete(task_t *task)
 {
-    task_t *cur  = task_list;
-    task_t *tmp  = NULL;
+    task_t *cur,*n;
     OS_CPU_SR cpu_sr;
     enter_critical();
-    while( cur != NULL )
+    list_for_each_del(cur,n,&task_list)
     {
         if( cur->timerNum == task->timerNum )
         {
-            tmp = cur->next;
-            cur->next = tmp->next;
+            n->next = cur->next;
             exit_critical();
             return true;
         }
-        cur = cur->next;
     }
-    exit_critical();
     return false;
 }
 /*
   循环遍历任务链表
 */
+static uint8_t idel_cnt = 0;
 void cola_task_loop(void)
 {
-    uint32_t events;
-    task_t *cur  = task_list;
+    uint32_t events =0;
+    task_t *cur,*n=NULL ;
     OS_CPU_SR cpu_sr;
-    
-    while( cur != NULL )
+    bool busy = 0;
+    //list_for_each(cur,&task_list)
+    list_for_each_safe(cur,n,&task_list)
     {
+        //检查定时任务是否超时
+        if((TASK_TIMER == cur->taskFlag)&& (cur->start) && (time_after_eq(jiffies, cur->timerTick)))
+        {
+            enter_critical();
+            cur->run = true;
+            cur->timerTick = jiffies+cur->period;
+            exit_critical();
+        }
         if(cur->run)
         {
+            if((cur->oneShot)&&(TASK_TIMER == cur->taskFlag))
+            {
+               cur->start = false;
+            }
             if(NULL !=cur->func)
             {
                 events = cur->event;
@@ -112,32 +138,46 @@ void cola_task_loop(void)
                     cur->event = 0;
                     exit_critical();
                 }
-                cur->func(events);                
+                cur->func(cur->usr,events);
             }
+            busy|=cur->isBusy;
             if(TASK_TIMER == cur->taskFlag)
             {
                 enter_critical();
                 cur->run = false;
                 exit_critical();
             }
-            if((cur->oneShot)&&(TASK_TIMER == cur->taskFlag))
-            {
-               cur->start = false; 
-            }
+
         }
-        cur = cur->next;
+    }
+    if(!busy)
+    {
+        if(++idel_cnt >2 )
+        {
+            idel_cnt = 0;
+            if(sleep_handle)
+            {
+                idel_cnt = 0;
+                sleep_handle(0,busy);
+            }
+
+        }
+    }
+    else
+    {
+        idel_cnt = 0;
     }
 }
 
 /*
   定时器创建
 */
-int cola_timer_create(task_t *timer,cbFunc func)
+int cola_timer_create(task_t *timer,cbFunc func,void *arg)
 {
-    task_t *cur  = task_list;
+    task_t *cur ;
     OS_CPU_SR cpu_sr;
     enter_critical();
-    
+
     if((NULL == timer )||(cola_task_is_exists(timer)))
     {
         exit_critical();
@@ -151,27 +191,19 @@ int cola_timer_create(task_t *timer,cbFunc func)
     timer->timerTick = 0;
     timer->func      = func;
     timer->event     = 0;
-    if(NULL == task_list)
+    timer->usr       = arg;
+    timer->isBusy    = TASK_IDLE;
+
+    list_for_null(cur,&task_list)
     {
-        task_num++;
-        timer->timerNum = task_num;
-        task_list = timer;
-        task_list->next = NULL;
+
     }
-    else
-    {
-        while(cur->next != NULL)
-        {
-            cur = cur->next;
-        }
-        task_num++;
-        timer->timerNum = task_num;
-        cur->next = timer;
-        timer->next = NULL;
-    }
+    timer->timerNum = cur->timerNum+1;
+    cur->next   = timer;
+    timer->next = NULL;
     exit_critical();
     return true;
-    
+
 }
 
 /*
@@ -179,22 +211,21 @@ int cola_timer_create(task_t *timer,cbFunc func)
 */
 int cola_timer_start(task_t *timer,bool one_shot,uint32_t time_ms)
 {
-    task_t *cur  = task_list;
+    task_t *cur ;
     OS_CPU_SR cpu_sr;
     enter_critical();
-    while( cur != NULL )
+    list_for_each(cur,&task_list)
     {
         if( cur->timerNum == timer->timerNum )
         {
             timer->period    = time_ms;
             timer->oneShot   = one_shot;
             timer->start     = true;
-            timer->timerTick = 0;
+            timer->timerTick = jiffies + time_ms;
             timer->taskFlag  = TASK_TIMER;
             exit_critical();
             return true;
         }
-        cur = cur->next;
     }
     exit_critical();
     return false;
@@ -204,10 +235,10 @@ int cola_timer_start(task_t *timer,bool one_shot,uint32_t time_ms)
 */
 int cola_timer_stop(task_t *timer)
 {
-    task_t *cur  = task_list;
+    task_t *cur;
     OS_CPU_SR cpu_sr;
     enter_critical();
-    while( cur != NULL )
+    list_for_each(cur,&task_list)
     {
         if( cur->timerNum == timer->timerNum )
         {
@@ -215,46 +246,30 @@ int cola_timer_stop(task_t *timer)
             exit_critical();
             return true;
         }
-        cur = cur->next;
     }
     exit_critical();
     return false;
 }
 /*
-  定时信息轮训
+  删除指定定时器
 */
+int cola_timer_delete(task_t *timer)
+{
+    return cola_task_delete(timer);
+}
 void cola_timer_ticker(void)
 {
-    task_t *cur  = task_list;
-    OS_CPU_SR cpu_sr;
-    while( cur != NULL )
-    {
-        if((TASK_TIMER == cur->taskFlag)&& cur->start)
-        {
-            if(++cur->timerTick >= cur->period)
-            {
-                cur->timerTick = 0;
-                if(cur->func != NULL)
-                {
-                    enter_critical();                   
-                    cur->run = true;
-                    exit_critical();
-                }
-            }
-        }
-        cur = cur->next;
-    }
+    jiffies++;
 }
-
 /*
   设置事件
 */
 int cola_set_event(task_t *task,uint32_t sig_id)
 {
-    task_t *cur  = task_list;
+    task_t *cur;
     OS_CPU_SR cpu_sr;
     enter_critical();
-    while( cur != NULL )
+    list_for_each(cur,&task_list)
     {
         if( cur->timerNum == task->timerNum )
         {
@@ -262,7 +277,6 @@ int cola_set_event(task_t *task,uint32_t sig_id)
             exit_critical();
             return true;
         }
-        cur = cur->next;
     }
     exit_critical();
     return false;
@@ -272,10 +286,10 @@ int cola_set_event(task_t *task,uint32_t sig_id)
 */
 int  cola_clear_event(task_t *task,uint32_t sig_id)
 {
-    task_t *cur  = task_list;
+    task_t *cur;
     OS_CPU_SR cpu_sr;
     enter_critical();
-    while( cur != NULL )
+    list_for_each(cur,&task_list)
     {
         if( cur->timerNum == task->timerNum )
         {
@@ -283,8 +297,20 @@ int  cola_clear_event(task_t *task,uint32_t sig_id)
             exit_critical();
             return true;
         }
-        cur = cur->next;
     }
     exit_critical();
     return false;
 }
+void cola_delay_ms(uint32_t ms)
+{
+    unsigned int start = jiffies;
+    while((jiffies-start) <= ms);
+}
+
+int cola_set_sleep_handel(cbFunc func)
+{
+    sleep_handle = func;
+    return 0;
+}
+
+

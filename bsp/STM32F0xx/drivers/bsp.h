@@ -15,35 +15,25 @@
 /* 包含的头文件 --------------------------------------------------------------*/
 
 #include <stdint.h>
+#include "stm32f0xx_conf.h"
 
 
-void enable_irq(void);
-
-void disable_irq(void);
-	
-uint32_t get_pri(void );
-
-void set_pri(uint32_t x);
-uint8_t get_run_mode(void);
+#define    disable_irq()  __disable_irq()
+#define    enable_irq()    __enable_irq()    
 
 #define OS_CPU_SR   uint32_t
 #define enter_critical()        \
-    do { cpu_sr = get_pri(); disable_irq();} while (0)
+    do { cpu_sr = __get_PRIMASK(); __disable_irq();} while (0)
 #define exit_critical()         \
-    do { set_pri(cpu_sr);} while (0)
+    do { __set_PRIMASK(cpu_sr);} while (0)
 
 
 
-
-
-///* 宏定义 --------------------------------------------------------------------*/
-
-
-///* 函数申明 ------------------------------------------------------------------*/
+uint32_t bsp_get_radom(uint32_t range_min,uint32_t range_max);
 
 void bsp_init(void);
-void delay_ms(uint32_t cnt);
-
+void bsp_app_init(void);
+void bsp_restart(void);
 #endif /* _BSP_H */
 
 /**** Copyright (C)2016 sun. All Rights Reserved **** END OF FILE ****/

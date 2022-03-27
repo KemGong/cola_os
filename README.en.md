@@ -1,37 +1,29 @@
 # cola_os
 
-#### Description
-300行代码实现多任务管理的OS，在很多MCU开发中，功能很简单，实时性要求不强，如果使用RTOS显得太浪费，任务多了管理不当又很乱，所以才会想起做一个轮询的任务管理。简单好用！
-CSDN:
+#### 介绍
+300行代码实现多任务管理的OS，在很多MCU开发中，功能很简单，实时性要求不强，如果使用RTOS显得太浪费，任务多了管理不当又很乱，所以才会想起做一个轮询的任务管理。简单好用！  
+CSDN:  
+https://blog.csdn.net/ziqi5543/article/details/101263165?spm=1001.2014.3001.5501
+https://blog.csdn.net/ziqi5543/article/details/112966843?spm=1001.2014.3001.5501
+#### 软件架构
+软件架构说明
 
-#### Software Architecture
-Software architecture description
+├─app      //主函数main  
+├─bsp      //项目工程  
+│&nbsp;&nbsp;├─STM32F0xx //stm32f0项目工程  
+│&nbsp;&nbsp;│&nbsp;&nbsp;  ├─drivers //驱动文件  
+│&nbsp;&nbsp;│&nbsp;&nbsp;  ├─example //MDK工程  
+│&nbsp;&nbsp;│&nbsp;&nbsp;  ├─Libraries //库文件  
+├─doc       //说明文档  
+└─os        //任务调度  
 
-#### Installation
+#### 使用说明
+参考doc下说明文档
 
-1. xxxx
-2. xxxx
-3. xxxx
+#### 参与贡献
 
-#### Instructions
+1. Fork 本仓库
+2. 新建 Feat_xxx 分支
+3. 提交代码
+4. 新建 Pull Request
 
-1. xxxx
-2. xxxx
-3. xxxx
-
-#### Contribution
-
-1. Fork the repository
-2. Create Feat_xxx branch
-3. Commit your code
-4. Create Pull Request
-
-
-#### Gitee Feature
-
-1. You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2. Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3. Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4. The most valuable open source project [GVP](https://gitee.com/gvp)
-5. The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6. The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)

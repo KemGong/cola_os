@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "config.h"
 #include "bsp.h"
 #include "stm32l0xx.h"
@@ -9,21 +11,24 @@
 //ÊÊÅä
 void Error_Handler(void)
 {
-    os_log("Error_Handler\n");
+    //os_log("Error_Handler\n");
 }
-
+void HardFault_Handler(void)
+{
+    //os_log("HardFault_Handler\n");
+}
 void bsp_rcc(void)
 {
     HAL_Init();
-    
+
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
     RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-    /** Configure the main internal regulator output voltage 
+    /** Configure the main internal regulator output voltage
     */
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-    /** Initializes the CPU, AHB and APB busses clocks 
+    /** Initializes the CPU, AHB and APB busses clocks
     */
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -35,9 +40,9 @@ void bsp_rcc(void)
     RCC_OscInitStruct.PLL.PLLDIV = RCC_PLLDIV_2;
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
-        Error_Handler();
+    Error_Handler();
     }
-    /** Initializes the CPU, AHB and APB busses clocks 
+    /** Initializes the CPU, AHB and APB busses clocks
     */
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -48,14 +53,14 @@ void bsp_rcc(void)
 
     if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
     {
-        Error_Handler();
+    Error_Handler();
     }
     PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_RTC;
     PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
     PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
     {
-        Error_Handler();
+    Error_Handler();
     }
 }
 pure_initcall(bsp_rcc);
@@ -69,38 +74,45 @@ void SysTick_Handler(void)
 
     /* USER CODE END SysTick_IRQn 1 */
 }
-void EXTI0_1_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI0_1_IRQn 0 */
-
-  /* USER CODE END EXTI0_1_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
-  /* USER CODE BEGIN EXTI0_1_IRQn 1 */
-
-  /* USER CODE END EXTI0_1_IRQn 1 */
+void cola_show_version(void)
+{    
+    os_log("\n \\ | /\n");    
+    os_log("- cola -     Ver:%d.%d.%d\n",COLA_VERSION, COLA_SUBVERSION, COLA_REVISION);    
+    os_log(" / | \\ \n");    
 }
+
 void bsp_init(void)
 {
     do_init_call();
+    
+}
+void bsp_app_init(void)
+{
+    do_app_init_call();
+    cola_show_version();
 }
 
-void enable_irq(void)
+void bsp_restart(void)
 {
-    __enable_irq();
+     NVIC_SystemReset();
+}
+uint32_t bsp_get_radom(uint32_t range_min,uint32_t range_max)
+{
+    uint32_t seed = jiffies;
+    if(range_max==range_min)
+    {
+        return range_min;
+    }
+    if(range_min > range_max)
+    {
+        return 0;
+    }
+    srand((unsigned)seed);
+    return rand() % (range_max-range_min) + range_min;
 }
 
-void disable_irq(void)
+void bsp_mdelay(unsigned long ms)
 {
-    __disable_irq();
+    ms *= 32000;
+    for(; ms != 0; ms--);
 }
-	
-uint32_t get_pri(void )
-{
-    return __get_PRIMASK();
-}
-
-void set_pri(uint32_t x)
-{
-    __set_PRIMASK(x);
-}
-

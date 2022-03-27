@@ -5,6 +5,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define COLA_VERSION      1 
+#define COLA_SUBVERSION   2
+#define COLA_REVISION     0
 
 
 //任务事件
@@ -28,8 +31,13 @@ enum
     TIMER_ONE_SHOT   = 0x01,
 };
 
+enum
+{
+    TASK_IDLE        = 0x00,
+    TASK_BUSY        = 0x01,
+};
 
-typedef void (*cbFunc)(uint32_t event);
+typedef void (*cbFunc)(void *arg,uint32_t event);
 
 typedef struct task_s
 {
@@ -42,13 +50,17 @@ typedef struct task_s
     bool        taskFlag;    //任务标志是主任务还是定时任务
     uint32_t    event;       //驱动事件  
     cbFunc      func;        //回调函数
+	bool        isBusy;      //用于低功耗控制
+    void*       usr;          //用户接口
     struct task_s *next;
 }task_t;
 
+#define stimer    task_t
+extern volatile unsigned int jiffies;
 /*
     主循环任务创建
 */
-int cola_task_create(task_t *task,cbFunc func);
+int cola_task_create(task_t *task,cbFunc func,void *arg);
 /*
     主循环任务删除
 */
@@ -60,7 +72,7 @@ void cola_task_loop(void);
 /*
     定时任务创建
 */
-int cola_timer_create(task_t *timer,cbFunc func);
+int cola_timer_create(task_t *timer,cbFunc func,void *arg);
 /*
     启动定时任务
     one_shot：TIMER_ALWAYS   循环定时
@@ -74,6 +86,11 @@ int cola_timer_start(task_t *timer,bool one_shot,uint32_t time_ms);
 int cola_timer_stop(task_t *timer);
 
 /*
+    删除定时任务
+*/
+int cola_timer_delete(task_t *timer);
+
+/*
     定时任务遍历，放到1ms ticker中
 */
 void cola_timer_ticker(void);
@@ -85,5 +102,10 @@ int  cola_set_event(task_t *task,uint32_t sig_id);
     取消任务事件
 */
 int  cola_clear_event(task_t *task,uint32_t sig_id);
+/*
+    阻塞延时函数
+*/
+void cola_delay_ms(uint32_t ms);
 
+int cola_set_sleep_handel(cbFunc func);
 #endif 

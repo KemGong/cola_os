@@ -1,39 +1,27 @@
-/**
-  ********************************  STM32F10x  *********************************
-  * @文件名     ： usart.c
-  * @作者       ： sun
-  * @库版本     ： V3.5.0
-  * @文件版本   ： V1.0.0
-  * @日期       ： 2016年05月03日
-  * @摘要       ： USART源文件
-  ******************************************************************************/
-/*----------------------------------------------------------------------------
-  更新日志:
-  2016-05-03 V1.0.0:初始版本
-  ----------------------------------------------------------------------------*/
-/* 包含的头文件 --------------------------------------------------------------*/
 #include "config.h"
 #include "stm32l0xx_hal.h"
-#include "osal_device.h"
-#include "osal_app.h"
-#include  "config.h"
-#include "alloter.h"
-#include "osal.h"
-#include "osal_time.h"
+#include "cola_os.h"
+#include "cola_device.h"
 #include "usart.h"
-struct USER_UART
-{
-    struct _CHN_SLOT rx_slot;
-};
-
+#include "cola_fifo.h"
 
 
 #ifdef USING_UART1 
-static struct device uart1_dev;
-char *uart1_name = "uart1";
-uint8_t uart1_task = TASK_NO_TASK;
-static struct USER_UART uart1_infor;
 
+
+#ifdef USING_DEBUG
+int fputc(int ch, FILE *f)
+{      
+    HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFF);
+    return ch;
+}
+#endif
+
+
+static cola_device_t uart1_dev;
+static cola_fifo_t   uart1_fifo;
+static task_t        uart1_timer;
+static uint8_t       uart1_buf[1024] = {0};
 
 static void uart1_configuration(uint32_t bund)
 {
@@ -57,74 +45,39 @@ static void uart1_sendnbyte(uint8_t *pData, uint16_t Length)
     HAL_UART_Transmit(&huart1,pData,Length,0xFF);
 }
 
-///************************************************
-//函数名称 ： USART1_Printf
-//功    能 ： 串口1打印输出
-//参    数 ： string --- 字符串
-//返 回 值 ： 无
-//作    者 ： sun
-//*************************************************/
-//static void uart1_printf(uint8_t *String)
-//{
-//  while((*String) != '\0')
-//  {
-//    uart1_sendbyte(*String);
-//    String++;
-//  }
-//}
-
-
-static int uart1_write(device_t *dev,off_t pos, const void *buffer, int size)
+static int uart1_write(cola_device_t *dev, int pos, const void *buffer, int size)
 {
 	uart1_sendnbyte((uint8_t *)buffer,size);
 	return size;
 }
-
-static void  uart1_slot_init(void)
+static int uart1_read(cola_device_t *dev, int pos, void *buffer, int size)
 {
-    struct USER_UART *pchn;
-    pchn                   = &uart1_infor;
-    pchn->rx_slot.data_cnt = 0;
-    pchn->rx_slot.tx       = INVALID_PTR;
-    pchn->rx_slot.rx       = INVALID_PTR;
-    pchn->rx_slot.data_max = 0xFF;
-}
-
-static int uart1_read(device_t *dev,off_t pos, void *buffer, int size)
-{
-    return get_chn_bytes(&uart1_infor.rx_slot, (uint8_t *)buffer, size);
-
-}
-static int uart1_peek(device_t *dev,off_t pos, void *buffer, int size)
-{
-    return peek_chn_bytes(&uart1_infor.rx_slot, (uint8_t *)buffer, size);
+    return cola_fifo_read(&uart1_fifo,buffer,size);
 }
 static int  uart1_write_slot(uint8_t in[], uint8_t len)
 {
-  return  put_chn_bytes(&uart1_infor.rx_slot, in, len);
+  return  cola_fifo_write(&uart1_fifo, in, len);
 }
-//static int  uart1_peek_slot(uint8_t in[], uint8_t len)
-//{
-//  return  peek_chn_bytes(&uart1_infor.rx_slot, in, len);
-//}
+
+static int uart1_config(cola_device_t *dev, void *args, void *var)
+{
+    struct serial_configure *cfg = (struct serial_configure *)args;
+    if(cfg)
+    {
+        uart1_configuration(cfg->baud_rate);
+    }
+    return 0;
+}
 
 static void USART1_RECV_IRQHandler(UART_HandleTypeDef *huart)
 {
     uint8_t c;
     c = (uint8_t)(huart->Instance->RDR);
-    if(uart1_write_slot( &c, 1))
+    if(uart1_dev.owner)
     {
-        if(TASK_NO_TASK != uart1_task)
+        if(uart1_write_slot( &c, 1))
         {
-            osal_start_timerEx(uart1_task, SIG_UART, 100);
-        }
-    }
-    else
-    {
-        if(TASK_NO_TASK != uart1_task)
-        {
-            osal_stop_timerEx(uart1_task, SIG_UART);
-            osal_set_event(uart1_task, SIG_UART);
+            cola_timer_start(&uart1_timer,TIMER_ONE_SHOT,pdMS_TO_TICKS(20));
         }
     }	
 }
@@ -319,9 +272,6 @@ static void USER_UART1_IRQHandler(UART_HandleTypeDef *huart)
 
 }
 
-
-
-
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
@@ -332,36 +282,33 @@ void USART1_IRQHandler(void)
 
   /* USER CODE END USART1_IRQn 1 */
 }
-static int uart1_config(device_t *dev,void *args,int pos)
-{
-    struct serial_configure *cfg = (struct serial_configure *)args;
-    uart1_configuration(cfg->baud_rate);
-    uart1_task = (uint8_t)pos;
-    return 0;
-}
-static struct device_ops uart1_ops =
+static struct cola_device_ops uart1_ops =
 {
 	.write  = uart1_write,
     .read   = uart1_read,
-    .peek   = uart1_peek,
     .config = uart1_config,
 };
 
-
-
-
-
+static void uart_timer_cb(void *arg,uint32_t event)
+{
+    if(uart1_dev.owner)
+    {
+        cola_set_event(uart1_dev.owner,SIG_DATA);
+    }
+}
 #endif
-int board_setup_usart(void)
+
+
+void board_setup_usart(void)
 {
 #ifdef USING_UART1
     uart1_configuration(115200);
-    uart1_slot_init();
-    uart1_dev.name = uart1_name;
-    uart1_dev.ops = &uart1_ops;
-    device_register(&uart1_dev);
+    cola_fifo_init(&uart1_fifo,uart1_buf,sizeof(uart1_buf));
+    cola_timer_create(&uart1_timer,uart_timer_cb,NULL);
+    uart1_dev.name = "uart1";
+    uart1_dev.dops = &uart1_ops;
+    cola_device_register(&uart1_dev);
 #endif
-    return 0;
-}
-device_initcall(board_setup_usart);
 
+}
+fs_initcall(board_setup_usart);
