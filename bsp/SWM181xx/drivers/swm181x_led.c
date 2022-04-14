@@ -9,7 +9,7 @@
 #define DEF_VAL_HIGH         0x01
 #define DEF_VAL_LOW          0x00
 
-#define LED_GREEN_Pin        PIN5
+#define LED_GREEN_Pin        PIN8
 #define LED_GREEN_GPIO_Port  GPIOA
 
 

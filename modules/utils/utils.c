@@ -13,3 +13,24 @@ int get_num(char c)
         return c - 'A' + 10;
     return -1;
 }
+
+void put_be_val(uint32_t val, uint8_t * p, int bytes)
+{
+    while (bytes-- > 0)
+    {
+        *(p + bytes) = val & 0xFF;
+        val >>= 8;
+    }
+}
+
+uint32_t get_be_val(const uint8_t * p, int bytes)
+{
+    uint32_t ret = 0;
+    while (bytes-- > 0)
+    {
+        ret <<= 8;
+        ret |= *p++;
+    }
+
+    return ret;
+}

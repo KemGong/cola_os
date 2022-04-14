@@ -34,9 +34,11 @@ extern "C"
                             os_log("BUG at assert(%s)\n", #p); \
                         }       \
                      } while (0)
+    #define os_hex(x,len)         do { int i = 0;uint8_t *p=x;for(i=0;i<len;i++) os_log("%02X",p[i]); os_log("\r\n");} while (0)     
 #else
     #define os_log(...)
     #define assert(p) ((void)0)
+    #define os_hex(x,len)     
    
 #endif
 
@@ -44,7 +46,7 @@ extern "C"
 
  /********device***********/
 #define USING_UART0  
- 
+#define USING_I2C0   
                      
                      
                      

@@ -5,6 +5,23 @@
 #include "cola_init.h"
 #include <stdint.h>
 
+#define I2C_REG_8BIT     0x08               
+#define I2C_REG_16BIT    0x10           
+
+struct i2c_addr
+{
+    uint32_t addr:8;
+    uint32_t reg_width:8;
+    uint32_t reserve:16;
+};
+
+union i2c_msg
+{
+    uint32_t addr_msg;
+    struct i2c_addr addr;
+};
+
+
 enum OUTPUT_state
 {
 	STATE_OUTPUT_LOW  = 0x00,
@@ -53,6 +70,8 @@ struct cola_device
     const char * name;
     const struct cola_device_ops *dops;
     void   *owner;
+    void   *argv;
+    int    data;
     struct cola_device *next;
 };
 

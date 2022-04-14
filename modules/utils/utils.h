@@ -22,4 +22,6 @@
 
 #define ABS(x)   ((x)>0?(x):-(x))
 
+void put_be_val(uint32_t val, uint8_t * p, int bytes);
+uint32_t get_be_val(const uint8_t * p, int bytes);
 #endif // _UTILS_H_

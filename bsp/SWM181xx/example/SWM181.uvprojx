@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\Libraries\CMSIS\CoreSupport;..\Libraries\CMSIS\DeviceSupport;..\Libraries\SWM181_StdPeriph_Driver;..\..\..\app\user;..\..\..\modules\fifo;..\..\..\modules\utils;..\..\..\os;.\user;..\drivers;..\..\SWM181xx</IncludePath>
+              <IncludePath>..\Libraries\CMSIS\CoreSupport;..\Libraries\CMSIS\DeviceSupport;..\Libraries\SWM181_StdPeriph_Driver;..\..\..\app\user;..\..\..\modules\fifo;..\..\..\modules\utils;..\..\..\os;.\user;..\drivers;..\..\SWM181xx;..\..\..\modules\sht;..\..\..\modules\aht</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -418,6 +418,11 @@
               <FileType>1</FileType>
               <FilePath>..\drivers\swm181x_usart.c</FilePath>
             </File>
+            <File>
+              <FileName>swm181x_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\swm181x_i2c.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -471,6 +476,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\app\user\app_uart.c</FilePath>
             </File>
+            <File>
+              <FileName>app_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app\user\app_sensor.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -485,6 +495,16 @@
               <FileName>utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\modules\utils\utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>sht30.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\modules\sht\sht30.c</FilePath>
+            </File>
+            <File>
+              <FileName>aht20.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\modules\aht\aht20.c</FilePath>
             </File>
           </Files>
         </Group>
