@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "aht20.h"
 
+
 #define AHT20_ADDR       0x38
 
 struct aht20_data
@@ -58,11 +59,14 @@ static void aht20_reset(cola_device_t *i2c_bus)
     uint8_t value[]     = {0x1b,0x1c,0x1e};
     for(i = 0; i < 3; i++)
     {
-        cola_device_write(i2c_bus,value[i],temp,3);
+        memset(temp,0x00,sizeof(temp));
+        temp[0] = value[i];
+        cola_device_write(i2c_bus,0,temp,3);
         cola_delay_ms(5);
-        cola_device_read(i2c_bus,CMD_READ_STATUS,temp,3);
+        cola_device_read(i2c_bus,0,temp,3);
         cola_delay_ms(10);
-        cola_device_write(i2c_bus,0xB0|value[i],&temp[1],2);
+        temp[0] = 0xB0|value[i];
+        cola_device_write(i2c_bus,0,temp,3);
     }
 }
 
@@ -70,8 +74,8 @@ static void aht20_read_status_and_init(cola_device_t *i2c_bus)
 {
     int err;
 	uint8_t  rx[8];
-	err = cola_device_read(i2c_bus,CMD_READ_STATUS,rx,1);
-    if (err == 0 || (rx[0] & ACK_READ_STATE)!=ACK_READ_STATE)
+	err = cola_device_read(i2c_bus,0,rx,1);
+    if (err < 0 || (rx[0] & ACK_READ_STATE)!=ACK_READ_STATE)
     {	
         os_log("aht20 is error,init now!\n");    
         aht20_reset(i2c_bus);
@@ -83,27 +87,18 @@ static int aht20_start_meas(cola_device_t *i2c_bus)
 {
     int ret = 0;
     uint8_t tx[8];
-    tx[0] = 0x33;
-    tx[1] = 0x00;
-    ret = cola_device_write(i2c_bus,CMD_MEAS_DATA,tx,2);
+    tx[0] = 0xac;
+    tx[1] = 0x33;
+    tx[2] = 0x00;
+    ret = cola_device_write(i2c_bus,0,tx,3);
     return ret;
 }
 
 static int aht20_check_busy(cola_device_t *i2c_bus)
 {
     uint8_t rx[2];
-    cola_device_read(i2c_bus,CMD_READ_STATUS,rx,1);
+    cola_device_read(i2c_bus,0,rx,1);
     return (rx[0]>>7) & 0x01;
-}
-
-static int aht20_read_data(cola_device_t *i2c_bus,uint8_t *out,int len)
-{
-    int err = cola_device_read(i2c_bus,CMD_READ_STATUS,out,len);
-    if (err == 0)
-    {			
-        os_log(" aht20_read_data error\n");
-    }
-    return err;
 }
 
 static int aht20_get_sensor_value(cola_device_t *dev, int pos, void *buffer, int size)
@@ -130,8 +125,8 @@ static int aht20_get_sensor_value(cola_device_t *dev, int pos, void *buffer, int
         }
     }
     cola_delay_ms(5);
-    aht20_read_data(aht20->i2c_bus,rx,7);
-    os_hex(rx,7);
+    cola_device_read(aht20->i2c_bus,0,rx,7);
+    //eslog_hex(NULL,rx,7);
     err = aht20_crc8_check(rx,6,rx[6]);
     if(err < 0) 
     {
@@ -161,9 +156,9 @@ static const struct cola_device_ops aht20_dev_ops =
     .read = aht20_get_sensor_value,
 };
 
-int aht20_init(const char *i2c_bus_name)
+static int aht20_init(const char *i2c_bus_name)
 {
-    union i2c_msg msg;
+
     aht20_data.i2c_bus  = cola_device_find(i2c_bus_name);
     if (aht20_data.i2c_bus == NULL)
     {
@@ -172,20 +167,17 @@ int aht20_init(const char *i2c_bus_name)
     aht20_dev.dops      = &aht20_dev_ops;
     aht20_dev.argv      = &aht20_data;
     aht20_dev.name      = "aht20";
-    msg.addr.addr       = AHT20_ADDR;
-    msg.addr.reg_width  = I2C_REG_8BIT;
-    aht20_dev.data      = msg.addr_msg;
+    aht20_dev.data      = AHT20_ADDR;
     cola_delay_ms(500);
-    aht20_data.i2c_bus->data =msg.addr_msg;
     aht20_read_status_and_init(aht20_data.i2c_bus);
     cola_device_register(&aht20_dev);
 
     return 0;
 }
 
-void setup_aht20(void)
+void aht20_register(void)
 {
     aht20_init("i2c0");
 }
 
-late_initcall(setup_aht20);
+late_initcall(aht20_register);

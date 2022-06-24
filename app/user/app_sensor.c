@@ -8,7 +8,6 @@
 static task_t timer_500ms;
 static cola_device_t *sensordev;
 
-//ledÿ500ms״̬�ı�һ��
 static void timer_500ms_cb(void *arg,uint32_t event)
 {
     uint8_t rx[8] = {0};

@@ -4,24 +4,7 @@
 
 #include "cola_init.h"
 #include <stdint.h>
-
-#define I2C_REG_8BIT     0x08               
-#define I2C_REG_16BIT    0x10           
-
-struct i2c_addr
-{
-    uint32_t addr:8;
-    uint32_t reg_width:8;
-    uint32_t reserve:16;
-};
-
-union i2c_msg
-{
-    uint32_t addr_msg;
-    struct i2c_addr addr;
-};
-
-
+          
 enum OUTPUT_state
 {
 	STATE_OUTPUT_LOW  = 0x00,
@@ -76,31 +59,31 @@ struct cola_device
 };
 
 /*
-    Çı¶¯×¢²á
+    é©±åŠ¨æ³¨å†Œ
 */
 int cola_device_register(cola_device_t *dev);
 /*
-    Çı¶¯²éÕÒ
+    é©±åŠ¨æŸ¥æ‰¾
 */
 cola_device_t *cola_device_find(const char *name);
 /*
-    Çı¶¯¶Á
+    é©±åŠ¨è¯»
 */
 int cola_device_read(cola_device_t *dev,  int pos, void *buffer, int size);
 /*
-    Çı¶¯Ğ´
+    é©±åŠ¨å†™
 */
 int cola_device_write(cola_device_t *dev, int pos, const void *buffer, int size);
 /*
-    Çı¶¯¿ØÖÆ
+    é©±åŠ¨æ§åˆ¶
 */
 int cola_device_ctrl(cola_device_t *dev,  int cmd, void *arg);
 /*
-    Çı¶¯ÅäÖÃ
+    é©±åŠ¨é…ç½®
 */
 int cola_device_cfg(cola_device_t *dev, void *args, void *var);
 /*
-    ÉèÖÃÇı¶¯ÊôÓÚÄÄ¸öÈÎÎñ
+    è®¾ç½®é©±åŠ¨å±äºå“ªä¸ªä»»åŠ¡
 */
 void cola_device_set_owner(cola_device_t *dev, const void *owner);
 #endif 

@@ -34,38 +34,15 @@ static void i2c0_init(void)
 
 static int i2c0_write(cola_device_t *dev, int pos, const void *buffer, int size)
 {
-    int ret,i,reg_width = 1;
-    uint8_t  reg_addr[2];
-    union i2c_msg addr  ;
-    addr.addr_msg   = dev->data;
+    int ret,i;
+    uint8_t addr = dev->data;
     uint8_t *tx = (uint8_t *)buffer;
-    ret = I2C_Start(I2C0, (addr.addr.addr << 1) | 0);
+    ret = I2C_Start(I2C0, (addr << 1) | 0);
     if(ret == 0)
     {
-        os_log("Master send NACK for address:%d,%d\r\n",addr.addr.addr,addr.addr.reg_width );
+        os_log("Master send NACK for address:%d\r\n",addr );
         I2C_Stop(I2C0);
         return ret;
-    }
-    if(addr.addr.reg_width == I2C_REG_8BIT)
-    {
-        reg_width = 1;
-        put_be_val(pos,reg_addr,1);
-    }
-    else
-    {
-        reg_width = 2;
-        put_be_val(pos,reg_addr,2);
-    }
-    
-    for(i = 0; i < reg_width; i++)
-    {
-        ret = I2C_Write(I2C0, reg_addr[i]);
-        if(ret == 0)
-        {
-            os_log("Master send NACK for data\r\n");
-            I2C_Stop(I2C0);
-            return ret;
-        }
     }
     for(i = 0; i < size; i++)
     {
@@ -82,48 +59,17 @@ static int i2c0_write(cola_device_t *dev, int pos, const void *buffer, int size)
 }
 static int i2c0_read(cola_device_t *dev, int pos, void *buffer, int size)
 {
-    int ret,i,reg_width = 1;
-    uint8_t  reg_addr[2];
-    union i2c_msg addr  ;
-    addr.addr_msg   = dev->data;
+    int ret,i;
+    uint8_t addr = dev->data;
     uint8_t *rx = (uint8_t *)buffer;
-    ret = I2C_Start(I2C0, (addr.addr.addr << 1) | 0);
-
+    ret = I2C_Start(I2C0, (addr << 1) | 1);
     if(ret == 0)
     {
         os_log("Slave send NACK for address\r\n");
         I2C_Stop(I2C0);
         return ret;
     }
-    if(addr.addr.reg_width == I2C_REG_8BIT)
-    {
-        reg_width = 1;
-        put_be_val(pos,reg_addr,1);
-    }
-    else
-    {
-        reg_width = 2;
-        put_be_val(pos,reg_addr,2);
-    }
-    
-    for(i = 0; i < reg_width; i++)
-    {
-        ret = I2C_Write(I2C0, reg_addr[i]);
-        if(ret == 0)
-        {
-            os_log("Slave send NACK for data\r\n");
-            I2C_Stop(I2C0);
-            return ret;
-        }
-    }
-    ret = I2C_Start(I2C0, (addr.addr.addr << 1) | 1);
-    if(ret == 0)
-    {
-        os_log("Slave send NACK for address\r\n");
-        I2C_Stop(I2C0);
-        return ret;
-    }
-    
+   
     for(i = 0; i < size-1; i++)
     {
         rx[i] = I2C_Read(I2C0, 1);
