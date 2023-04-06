@@ -2,7 +2,8 @@
 
 #### 介绍
 300行代码实现多任务管理的OS，在很多MCU开发中，功能很简单，实时性要求不强，如果使用RTOS显得太浪费，任务多了管理不当又很乱，所以才会想起做一个轮询的任务管理。简单好用！  
-CSDN:  
+CSDN:
+https://blog.csdn.net/weixin_39939185/article/details/129987882
 https://blog.csdn.net/ziqi5543/article/details/101263165?spm=1001.2014.3001.5501
 https://blog.csdn.net/ziqi5543/article/details/112966843?spm=1001.2014.3001.5501
 #### 软件架构
