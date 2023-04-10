@@ -7,9 +7,9 @@
           
 enum OUTPUT_state
 {
-	STATE_OUTPUT_LOW  = 0x00,
+    STATE_OUTPUT_LOW  = 0x00,
     STATE_OUTPUT_HIGH = 0x01,
-
+    STATE_OUTPUT_TOGGLE = 0X03,
 };
 
 enum LED_state
@@ -17,7 +17,6 @@ enum LED_state
     LED_OFF,
     LED_ON,
     LED_TOGGLE,
-
 };
 enum DEV_sleep
 {

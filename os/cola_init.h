@@ -1,6 +1,7 @@
 #ifndef _COLA_INIT_H_
 #define _COLA_INIT_H_
 
+//#define __CC_ARM
 
 #define  __used  __attribute__((__used__))
 
@@ -10,10 +11,10 @@ typedef void (*initcall_t)(void);
     static const initcall_t __initcall_##fn##id __used \
     __attribute__((__section__("initcall" #id "init"))) = fn;
 
-#define pure_initcall(fn)       __define_initcall(fn, 0) //¿ÉÓÃ×÷ÏµÍ³Ê±ÖÓ³õÊ¼»¯
-#define fs_initcall(fn)         __define_initcall(fn, 1) //tickºÍµ÷ÊÔ½Ó¿Ú³õÊ¼»¯
-#define device_initcall(fn)     __define_initcall(fn, 2) //Çı¶¯³õÊ¼»¯
-#define late_initcall(fn)       __define_initcall(fn, 3) //´«¸ĞÆ÷³õÊ¼»¯
+#define pure_initcall(fn)       __define_initcall(fn, 0) //å¯ç”¨ä½œç³»ç»Ÿæ—¶é’Ÿåˆå§‹åŒ–
+#define fs_initcall(fn)         __define_initcall(fn, 1) //tickå’Œè°ƒè¯•æ¥å£åˆå§‹åŒ–
+#define device_initcall(fn)     __define_initcall(fn, 2) //é©±åŠ¨åˆå§‹åŒ–
+#define late_initcall(fn)       __define_initcall(fn, 3) //ä¼ æ„Ÿå™¨åˆå§‹åŒ–
 
 
 void do_init_call(void);

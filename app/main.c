@@ -7,7 +7,7 @@ int main(void)
     disable_irq();
     bsp_init();
     enable_irq();
-    bsp_app_init();
+    //bsp_app_init();
     app_init();
     while(1)
     {

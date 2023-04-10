@@ -4,7 +4,7 @@
 
 void do_init_call(void)
 {
-#if defined(__CC_ARM)                         /* ARM Compiler */
+//#if defined(__CC_ARM)                         /* ARM Compiler */
     extern initcall_t initcall0init$$Base[];
     extern initcall_t initcall0init$$Limit[];
     extern initcall_t initcall1init$$Base[];
@@ -38,26 +38,26 @@ void do_init_call(void)
         if(fn)
             (*fn)();
     }
-#elif defined (__GNUC__)
-    extern initcall_t __initcall_start[];
-    extern initcall_t __initcall_end[];
+//#elif defined (__GNUC__)
+//    extern initcall_t __initcall_start[];
+//    extern initcall_t __initcall_end[];
 
-    initcall_t *start = __initcall_start;
-    initcall_t *end = __initcall_end;
-    initcall_t *fn;
+//    initcall_t *start = __initcall_start;
+//    initcall_t *end = __initcall_end;
+//    initcall_t *fn;
 
-    for (fn = start; fn < end; fn++)
-    {
-        printf("initcall fn 0x%x\r\n", fn);
-        (*fn)();
-    }
- #endif // defined
+//    for (fn = start; fn < end; fn++)
+//    {
+//        printf("initcall fn 0x%x\r\n", fn);
+//        (*fn)();
+//    }
+// #endif // defined
 }
 
 
 void do_app_init_call(void)
 {
-#if defined(__CC_ARM)
+//#if defined(__CC_ARM_)
     initcall_t *fn;
     extern initcall_t initcall3init$$Base[];
     extern initcall_t initcall3init$$Limit[];
@@ -68,5 +68,5 @@ void do_app_init_call(void)
         if(fn)
         (*fn)();
     }
-#endif
+//#endif
 }
