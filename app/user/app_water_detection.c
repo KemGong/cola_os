@@ -18,7 +18,6 @@ static void timer_1ms_cb(void *arg,uint32_t event)
         os_log("adc value[%d]:%d,\r\n", i, adc_value[i]);
     }*/
 
-
 #ifdef USING_DEBUG
     float voltage = 0;
     float percent = 0;
@@ -30,20 +29,18 @@ static void timer_1ms_cb(void *arg,uint32_t event)
         for (uint8_t i = 0; i < 5; i++) {
             voltage = (float)(adc_value[i]*3.3/4095);
             percent = (float)(adc_value[i]*100.0f/4095.0f);
-            //os_log("sysTickUptime = %d\r\n", sysTickUptime);
             os_log("ADC value[%d] = %d-->Voltage%d = %1.3fv-->Percent%d = %3.1f%%\r\n",
             i+3, adc_value[i], i+3, voltage, i+3, percent);
         }
     }
 #endif
-    if (adc_value[0] < 3500 //|| //adc检测阈值 2.82v->3500
-        /*adc_value[1] < 3500 || 
+    if (adc_value[0] < 3500 || //adc检测阈值 2.82v->3500
+        adc_value[1] < 3500 || 
         adc_value[2] < 3500 ||
         adc_value[3] < 3500 ||
-        adc_value[4] < 3500*/)
+        adc_value[4] < 3500)
     {
         cola_device_ctrl(output_dev, STATE_OUTPUT_HIGH, 0);
-        //set_out_signal(true);
 #ifdef USING_DEBUG
     if (test_cnt % 1000 == 0) {
         os_log("out signal high\r\n");
@@ -53,7 +50,6 @@ static void timer_1ms_cb(void *arg,uint32_t event)
     else
     {
         cola_device_ctrl(output_dev, STATE_OUTPUT_LOW, 0);
-        //set_out_signal(false);
 #ifdef USING_DEBUG
     if (test_cnt % 1000 == 0) {
         os_log("out signal low\r\n");
@@ -71,4 +67,3 @@ void water_detection_task(void)
     cola_timer_create(&timer_1ms,timer_1ms_cb,NULL);
     cola_timer_start(&timer_1ms,TIMER_ALWAYS,1);
 }
-

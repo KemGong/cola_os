@@ -40,7 +40,7 @@ void rcu_config(void)
   /* enable DMA clock */
   rcu_periph_clock_enable(RCU_DMA);
   /* config ADC clock */
-  rcu_adc_clock_config(RCU_ADCCK_APB2_DIV6);//
+  rcu_adc_clock_config(RCU_ADCCK_APB2_DIV6);
 }
 
 void sys_tick_init(void)
@@ -85,6 +85,7 @@ void bsp_restart(void)
 {
      NVIC_SystemReset();
 }
+
 uint32_t bsp_get_radom(uint32_t range_min,uint32_t range_max)
 {
     uint32_t seed = jiffies;
@@ -99,6 +100,3 @@ uint32_t bsp_get_radom(uint32_t range_min,uint32_t range_max)
     srand((unsigned)seed);
     return rand() % (range_max-range_min) + range_min;
 }
-
-
-

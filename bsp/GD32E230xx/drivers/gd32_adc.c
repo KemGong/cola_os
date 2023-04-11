@@ -8,7 +8,6 @@
 
 #ifdef USING_ADC
 
-
 static cola_device_t adc_dev;
 uint16_t adc_value[5];
 
@@ -92,7 +91,7 @@ void dma_config(void)
 */
 void adc_config(void)
 {
-  adc_special_function_config(ADC_CONTINUOUS_MODE, ENABLE);//todo:开机连续转换跟扫描？
+  adc_special_function_config(ADC_CONTINUOUS_MODE, ENABLE);
   adc_special_function_config(ADC_SCAN_MODE, ENABLE);
   /* ADC trigger config */
   adc_external_trigger_source_config(ADC_REGULAR_CHANNEL, ADC_EXTTRIG_REGULAR_NONE);
@@ -138,7 +137,6 @@ static struct cola_device_ops adc_ops =
     .read   = adc_read,
     // .config = uart0_config,
 };
-
 
 void board_setup_adc(void)
 {

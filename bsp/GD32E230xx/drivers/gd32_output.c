@@ -9,13 +9,10 @@
 
 #ifdef USING_OUTPUT 
 
-#define DEF_VAL_HIGH    0x01
-#define DEF_VAL_LOW     0x00
+#define DEF_VAL_HIGH                 0x01
+#define DEF_VAL_LOW                  0x00
 #define OUTPUT_SIGNAL_PORT           GPIOA
 #define OUTPUT_SIGNAL_PIN            GPIO_PIN_0
-
-
-
 
 struct USER_OUTPUT
 {
@@ -26,13 +23,10 @@ struct USER_OUTPUT
     cola_device_t dev;
 };
 
-
 static struct USER_OUTPUT out_list[] = 
 {
-	{"output", OUTPUT_SIGNAL_PORT, OUTPUT_SIGNAL_PIN, DEF_VAL_LOW,0},
+    {"output", OUTPUT_SIGNAL_PORT, OUTPUT_SIGNAL_PIN, DEF_VAL_LOW,0},
 };
-
-
 
 void output_gpio_init(void)
 {
@@ -82,18 +76,16 @@ int output_ctrl(cola_device_t *dev, int cmd, void *args)
                     gpio_bit_reset(out_list[i].port, out_list[i].pin);
                 }
             }
-            return 1;            
+            return 1;
         }
     }
     return 0; 
 }
 
-
 static const struct cola_device_ops output_ops =
 {
     .control = output_ctrl,
 };
-
 
 void board_setup_output(void)
 {

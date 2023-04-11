@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>GD32E230G8U6_ACT</TargetName>
+      <TargetName>GD32E230</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>6160000::V6.16::ARMCLANG</pCCUsed>
@@ -601,7 +601,7 @@
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.5.0" condition="ARMv6_7_8-M Device">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.8.0"/>
         <targetInfos>
-          <targetInfo name="GD32E230G8U6_ACT"/>
+          <targetInfo name="GD32E230"/>
         </targetInfos>
       </component>
     </components>

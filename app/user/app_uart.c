@@ -6,7 +6,6 @@
 #include "utils.h"
 #include "app_uart.h"
 
-
 static uint8_t g_buf[512] = {0};
 
 static task_t uart_task;
@@ -36,11 +35,9 @@ static void uart_dev_init(void)
     cola_device_cfg(uart_dev,&cfg,0);
 }
 
-
 void app_uart_init(void)
 {
     uart_dev_init();
     
     cola_task_create(&uart_task,uart_cb,NULL);
 }
-
